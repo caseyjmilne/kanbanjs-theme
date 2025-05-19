@@ -118,8 +118,18 @@ class KanBan {
 
             console.log('IS TICKET, APPENDING')
 
-            // Insert before or after the ticket drop target (e.target)
-            e.target.parentElement.insertBefore( ticketEl, e.target )
+            const dropY = e.clientY; // Cursor position while dropping.
+            const targetRect = e.target.getBoundingClientRect(); // Target ticket boundaries. 
+            const targetMiddleY = targetRect.top + targetRect.height / 2;
+
+            if (dropY < targetMiddleY) {
+                // Insert before
+                e.target.parentElement.insertBefore(ticketEl, e.target);
+              } else {
+                // Insert after
+                e.target.parentElement.insertBefore(ticketEl, e.target.nextSibling);
+              }
+            
             return;
 
         }
@@ -153,6 +163,5 @@ class KanBan {
     = During dragover event.
 2. Append ticket into list at the correct position when dropped. 
     = During drop event. Requires identifying the index of the nearest ticket(s).
-3. Avoid adding ticket-shifted to the ticket being dragged.
 
 ********/
