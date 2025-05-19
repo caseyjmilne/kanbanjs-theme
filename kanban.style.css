@@ -1,0 +1,29 @@
+.status-col {
+    border: solid 1px rgb(200, 200, 200);
+    min-height: 500px;
+}
+
+.ticket {
+    border: solid 1px rgb(180, 180, 180);
+    height: 120px;
+    background-color: rgb(240, 240, 240);
+}
+
+#dropzones {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.dropzone {
+    background-color: green;
+    min-height: 500px;
+}
+
+.ticket-shifted {
+    margin-top: 50px;
+}
+
+.ticket-dragged {
+    opacity: 0.2;
+}
