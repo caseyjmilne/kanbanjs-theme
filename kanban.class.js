@@ -44,20 +44,7 @@ class KanBan {
             this.statusCols[status.key] = el;
         })
 
-        // Each ticket becomes a draggable box.
-        const tc = document.getElementById('tickets');
-        this.tickets.forEach( (ticket, i) => {
-            const el = document.createElement('div');
-            el.id = 'ticket-' + ticket.id;
-            el.innerHTML = ticket.title;
-            el.classList.add('ticket');
-            el.draggable = true;
-            el.addEventListener("dragstart", this.dragstartHandler)
-            el.addEventListener("dragend", this.dragendHandler)
-
-            // Append to status column.
-            this.statusCols[ticket.status].appendChild(el);
-        })
+        this.renderTickets();
 
 
     }
@@ -119,7 +106,6 @@ class KanBan {
             dropSpacerEl.classList.add('drop-spacer');
 
             const dropY = e.clientY; // Cursor position while dropping.
-            console.log(this)
             const isDropAbove = this.isDropAbove(dropY, e.target);
 
             if (isDropAbove) {
@@ -136,16 +122,25 @@ class KanBan {
 
     dropHandler(e) {
 
-
-
         e.preventDefault();
 
         // Get the new status. 
-        const dropStatus = this.getDropStatus(e.currentTarget);
-        console.log('drop status: ' + dropStatus)
+        const newStatus = this.getDropStatus(e.currentTarget);
 
-        const ticketId = e.dataTransfer.getData("text");
-        const ticketEl = document.getElementById( ticketId ); 
+        const ticketElId = e.dataTransfer.getData("text");
+        const ticketEl   = document.getElementById( ticketElId ); 
+        const ticketId   = parseInt( ticketEl.getAttribute('ticket-id') );
+
+        // Save change status.
+        const ticket = this.tickets.find(t => t.id === ticketId);
+
+
+        console.log(ticket)
+
+        if (ticket) {
+            ticket.status = newStatus;
+            this.saveTicketsToStorage();
+        }
 
         // Handle drop on drop spacer.
         const isDropspacer = e.target.classList[0] === 'drop-spacer';
@@ -202,6 +197,9 @@ class KanBan {
 
     saveTicketsToStorage() {
         localStorage.setItem('kanbanTickets', JSON.stringify(this.tickets));
+
+        console.log('Current Save:')
+        console.log(this.tickets)
     }
 
     loadTicketsFromStorage() {
@@ -217,6 +215,25 @@ class KanBan {
 
     getDropStatus(statusColEl) {
         return statusColEl.getAttribute('status-key');
+    }
+
+    // Each ticket becomes a draggable box.
+    renderTickets() {
+        
+        this.tickets.forEach( (ticket, i) => {
+            const el = document.createElement('div');
+            el.id = 'ticket-' + ticket.id;
+            el.innerHTML = ticket.title;
+            el.classList.add('ticket');
+            el.draggable = true;
+            el.setAttribute('ticket-id', ticket.id);
+            el.addEventListener("dragstart", this.dragstartHandler)
+            el.addEventListener("dragend", this.dragendHandler)
+
+            // Append to status column.
+            this.statusCols[ticket.status].appendChild(el);
+        })
+
     }
 
 }
