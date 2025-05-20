@@ -27,3 +27,8 @@
 .ticket-dragged {
     opacity: 0.2;
 }
+
+.drop-spacer {
+    background-color: rgb(152, 251, 152);
+    height: 40px;
+}
