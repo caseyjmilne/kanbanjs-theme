@@ -10,7 +10,6 @@ class KanBan {
 
         // Set local tickets, statuses.
 
-        this.initialTickets = JSON.parse(JSON.stringify(tickets)); // deep copy for reset
         this.tickets = [...tickets]; // working state
         this.statuses = [...statuses];
 
@@ -29,25 +28,8 @@ class KanBan {
 
     init() {
 
-        // Each status becomes a droppable column.
-        const dzc = document.getElementById('dropzones');
-        this.statuses.forEach( (status, i) => {
-            const el = document.createElement('div');
-            el.innerHTML = status.title;
-            el.id = 'dropzone-' + status.key;
-            el.classList.add('status-col');
-            el.classList.add('status-col-' + status.key);
-            el.setAttribute('status-key', status.key);
-            el.addEventListener("dragover", this.dragoverHandler.bind(this));
-            el.addEventListener("drop", this.dropHandler.bind(this));
-            dzc.appendChild(el);
-
-            // Track the dropzone element to enable ticket insertion.
-            this.statusCols[status.key] = el;
-        })
-
+        this.renderStatusColumns();
         this.renderTickets();
-
 
     }
 
@@ -97,10 +79,7 @@ class KanBan {
             e.preventDefault();
 
             // Remove existing spacer dropzone.
-            const dropSpacerEls = document.querySelectorAll('.drop-spacer');
-            dropSpacerEls.forEach( ( dropSpacerEl, i ) => {
-                dropSpacerEl.remove();
-            });
+            this.removeSpacerDropzones()
 
             // Add spacer dropzone before or after ticket.
 
@@ -149,7 +128,7 @@ class KanBan {
         if(isDropspacer) {
 
             e.target.parentElement.insertBefore(ticketEl, e.target);
-            e.target.remove();
+            this.removeSpacerDropzones();
             return;
 
         }
@@ -169,12 +148,14 @@ class KanBan {
                 e.target.parentElement.insertBefore(ticketEl, e.target.nextSibling);
             }
             
+            this.removeSpacerDropzones();
             return;
 
         }
 
         // Default behavior when the drop target is the status column ticket is appended to the end.
         e.currentTarget.appendChild( ticketEl );
+        this.removeSpacerDropzones();
 
     }
 
@@ -182,6 +163,7 @@ class KanBan {
 
         const ticketEl = document.getElementById(this.dragTicket);
         ticketEl.classList.remove('ticket-dragged');
+        this.removeSpacerDropzones();
 
     }
 
@@ -219,6 +201,29 @@ class KanBan {
         return statusColEl.getAttribute('status-key');
     }
 
+    // Each status becomes a droppable column.
+    renderStatusColumns() {
+
+        
+        const dzc = document.getElementById('dropzones');
+
+        this.statuses.forEach( (status, i) => {
+            const el = document.createElement('div');
+            el.innerHTML = status.title;
+            el.id = 'dropzone-' + status.key;
+            el.classList.add('status-col');
+            el.classList.add('status-col-' + status.key);
+            el.setAttribute('status-key', status.key);
+            el.addEventListener("dragover", this.dragoverHandler.bind(this));
+            el.addEventListener("drop", this.dropHandler.bind(this));
+            dzc.appendChild(el);
+
+            // Track the dropzone element to enable ticket insertion.
+            this.statusCols[status.key] = el;
+        })
+
+    }
+
     // Each ticket becomes a draggable box.
     renderTickets() {
         
@@ -229,13 +234,20 @@ class KanBan {
             el.classList.add('ticket');
             el.draggable = true;
             el.setAttribute('ticket-id', ticket.id);
-            el.addEventListener("dragstart", this.dragstartHandler)
-            el.addEventListener("dragend", this.dragendHandler)
+            el.addEventListener("dragstart", this.dragstartHandler.bind(this));
+            el.addEventListener("dragend", this.dragendHandler.bind(this));
 
             // Append to status column.
             this.statusCols[ticket.status].appendChild(el);
         })
 
+    }
+
+    removeSpacerDropzones() {
+        const dropSpacerEls = document.querySelectorAll('.drop-spacer');
+        dropSpacerEls.forEach( ( dropSpacerEl, i ) => {
+            dropSpacerEl.remove();
+        });
     }
 
 }
