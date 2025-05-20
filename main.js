@@ -16,6 +16,11 @@ const tickets = [
         id: 102,
         title: "Workout at Creekside",
         status: "active"
+    },
+    {
+        id: 103,
+        title: "Buy apartment in Panama.",
+        status: "new"
     }
 ]
 
@@ -28,6 +33,10 @@ statuses = [
     {
         key: "active",
         title: "Active"
+    },
+    {
+        key: "review",
+        title: "Review"
     },
     {
         key: "done",

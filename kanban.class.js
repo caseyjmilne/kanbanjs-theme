@@ -6,16 +6,18 @@ class KanBan {
     dragTicket    = null;
 
     // Requires tickets, statuses passed.
-    constructor( tickets, statuses ) {
+    constructor( tickets, statuses, resetStorage = null ) {
 
         // Set local tickets, statuses.
 
         this.initialTickets = JSON.parse(JSON.stringify(tickets)); // deep copy for reset
         this.tickets = [...tickets]; // working state
-        this.tickets  = tickets;
         this.statuses = [...statuses];
-        this.loadTicketsFromStorage(); // try to restore from previous session
 
+        if( resetStorage === null ) {
+            this.loadTicketsFromStorage(); // try to restore from previous session
+        }
+        
         const kbe = document.getElementById('kanban');
         const el1 = document.createElement('div');
         el1.id = "dropzones";
@@ -146,15 +148,15 @@ class KanBan {
         const isDropspacer = e.target.classList[0] === 'drop-spacer';
         if(isDropspacer) {
 
-            console.log('SPACER DROP')
+            e.target.parentElement.insertBefore(ticketEl, e.target);
+            e.target.remove();
+            return;
 
         }
 
         // Handle drop on ticket.
         const isTicket = e.target.classList[0] === 'ticket';
         if(isTicket) {
-
-            console.log('IS TICKET, APPENDING')
 
             const dropY = e.clientY; // Cursor position while dropping.
             const isDropAbove = this.isDropAbove(dropY, e.target)
@@ -243,7 +245,7 @@ class KanBan {
 
 /****** @TODO 
 1. Save kanban ticket changes.
-        1A) Get the new status from the status column.
+        1A) Save the position of the tickets. 
 2. Add spacer before or after ticket during dragover ticket.
         2A) Determine logic for removing the spacer.
             - New spacer is created via dragover.
