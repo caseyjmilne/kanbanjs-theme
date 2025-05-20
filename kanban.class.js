@@ -9,8 +9,12 @@ class KanBan {
     constructor( tickets, statuses ) {
 
         // Set local tickets, statuses.
+
+        this.initialTickets = JSON.parse(JSON.stringify(tickets)); // deep copy for reset
+        this.tickets = [...tickets]; // working state
         this.tickets  = tickets;
-        this.statuses = statuses;
+        this.statuses = [...statuses];
+        this.loadTicketsFromStorage(); // try to restore from previous session
 
         const kbe = document.getElementById('kanban');
         const el1 = document.createElement('div');
@@ -31,6 +35,7 @@ class KanBan {
             el.id = 'dropzone-' + status.key;
             el.classList.add('status-col');
             el.classList.add('status-col-' + status.key);
+            el.setAttribute('status-key', status.key);
             el.addEventListener("dragover", this.dragoverHandler.bind(this));
             el.addEventListener("drop", this.dropHandler.bind(this));
             dzc.appendChild(el);
@@ -88,6 +93,13 @@ class KanBan {
             e.preventDefault();
         }
 
+        // Handle drop on drop spacer.
+        const isDropspacer = e.target.classList[0] === 'drop-spacer';
+        if(isDropspacer) {
+            // Enable dropping.
+            e.preventDefault();
+        }
+
         // Verify that the target is a ticket.
         const isTicket = e.target.classList[0] === 'ticket';
         if(isTicket) {
@@ -124,7 +136,14 @@ class KanBan {
 
     dropHandler(e) {
 
+
+
         e.preventDefault();
+
+        // Get the new status. 
+        const dropStatus = this.getDropStatus(e.currentTarget);
+        console.log('drop status: ' + dropStatus)
+
         const ticketId = e.dataTransfer.getData("text");
         const ticketEl = document.getElementById( ticketId ); 
 
@@ -181,13 +200,60 @@ class KanBan {
 
     }
 
+    saveTicketsToStorage() {
+        localStorage.setItem('kanbanTickets', JSON.stringify(this.tickets));
+    }
+
+    loadTicketsFromStorage() {
+        const stored = localStorage.getItem('kanbanTickets');
+        if (stored) {
+            try {
+                this.tickets = JSON.parse(stored);
+            } catch (e) {
+                console.error("Failed to parse saved tickets", e);
+            }
+        }
+    }
+
+    getDropStatus(statusColEl) {
+        return statusColEl.getAttribute('status-key');
+    }
+
 }
 
 
 
 
 /****** @TODO 
-
-1. Add spacer before or after ticket during dragover ticket.
+1. Save kanban ticket changes.
+        1A) Get the new status from the status column.
+2. Add spacer before or after ticket during dragover ticket.
+        2A) Determine logic for removing the spacer.
+            - New spacer is created via dragover.
+            - Drop is completed.
+            - Dragend without drop. 
+            - Hover over element that is not a ticket, like the status list. 
 
 ********/
+
+
+/******
+ * 
+ * Examples:
+
+onDrop(e) {
+    const ticketId = parseInt(draggedEl.dataset.id);
+    const newStatus = dropColumn.dataset.status;
+
+    const ticket = this.tickets.find(t => t.id === ticketId);
+    if (ticket) {
+        ticket.status = newStatus;
+        this.saveTicketsToStorage();
+    }
+}
+
+
+
+ * 
+ * 
+ */
