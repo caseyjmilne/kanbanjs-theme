@@ -129,7 +129,6 @@ class KanBan {
 
             e.target.parentElement.insertBefore(ticketEl, e.target);
             this.removeSpacerDropzones();
-            return;
 
         }
 
@@ -149,13 +148,23 @@ class KanBan {
             }
             
             this.removeSpacerDropzones();
-            return;
 
         }
 
         // Default behavior when the drop target is the status column ticket is appended to the end.
-        e.currentTarget.appendChild( ticketEl );
-        this.removeSpacerDropzones();
+        if( !isTicket && !isDropspacer) {
+            e.currentTarget.appendChild( ticketEl );
+            this.removeSpacerDropzones();
+        }
+
+        /* Order Handling */
+
+        // Get the ticket elements for the drop column. 
+        const statusColumn = this.statusCols[newStatus];
+        const ticketEls = Array.from(statusColumn.querySelectorAll('.ticket'));
+        const droppedTicketIndex = ticketEls.indexOf(ticketEl);
+
+        console.log( droppedTicketIndex )
 
     }
 
@@ -226,14 +235,18 @@ class KanBan {
 
     // Each ticket becomes a draggable box.
     renderTickets() {
+
+        // Sort tickets by position
+        const sortedTickets = [...this.tickets].sort((a, b) => a.position - b.position);
         
-        this.tickets.forEach( (ticket, i) => {
+        sortedTickets.forEach( (ticket, i) => {
             const el = document.createElement('div');
             el.id = 'ticket-' + ticket.id;
             el.innerHTML = ticket.title;
             el.classList.add('ticket');
             el.draggable = true;
             el.setAttribute('ticket-id', ticket.id);
+            el.setAttribute('ticket-position', ticket.position);
             el.addEventListener("dragstart", this.dragstartHandler.bind(this));
             el.addEventListener("dragend", this.dragendHandler.bind(this));
 

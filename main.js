@@ -6,13 +6,13 @@ const tickets = [
         id: 100,
         title: "Take out trash",
         status: "new",
-        position: 2
+        position: 1
     },
     {
         id: 101,
         title: "Shop for running shoes",
         status: "new",
-        position: 1
+        position: 2
     },
     {
         id: 102,
@@ -50,4 +50,4 @@ statuses = [
 
 /****** Run KanBan ********/
 
-const kb = new KanBan( tickets, statuses, true );
+const kb = new KanBan( tickets, statuses, false );
