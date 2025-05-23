@@ -157,14 +157,48 @@ class KanBan {
             this.removeSpacerDropzones();
         }
 
-        /* Order Handling */
+        /* Position Handling */
+        this.dropPositionHandler( newStatus, ticket, ticketEl );
+
+    }
+
+    dropPositionHandler( newStatus, ticket, ticketEl ) {
 
         // Get the ticket elements for the drop column. 
         const statusColumn = this.statusCols[newStatus];
         const ticketEls = Array.from(statusColumn.querySelectorAll('.ticket'));
         const droppedTicketIndex = ticketEls.indexOf(ticketEl);
 
+        const prevTicketEl = ticketEls[droppedTicketIndex - 1] || null;
+        const nextTicketEl = ticketEls[droppedTicketIndex+ 1] || null;
+
+        
+
+        const prevTicket = prevTicketEl ? this.tickets.find(t => t.id == prevTicketEl.getAttribute('ticket-id')) : null;
+        const nextTicket = nextTicketEl ? this.tickets.find(t => t.id == nextTicketEl.getAttribute('ticket-id')) : null;
+        
+        // Set new position based on whether there are ticket(s) above and below it.
+        let newPosition;
+        if (prevTicket && nextTicket) {
+            newPosition = (prevTicket.position + nextTicket.position) / 2;
+        } else if (prevTicket) {
+            newPosition = prevTicket.position + 1;
+        } else if (nextTicket) {
+            newPosition = nextTicket.position - 1;
+        } else {
+            newPosition = 0; // only ticket in column
+        }
+
+        // Update the ticket position and save to storage.
+        ticket.position = newPosition;
+        ticketEl.setAttribute('ticket-position', newPosition);
+        this.saveTicketsToStorage();
+
+        console.log('Dropped Ticket Index')
         console.log( droppedTicketIndex )
+
+        console.log('Dropped Ticket New Position')
+        console.log( newPosition )
 
     }
 
@@ -190,9 +224,6 @@ class KanBan {
 
     saveTicketsToStorage() {
         localStorage.setItem('kanbanTickets', JSON.stringify(this.tickets));
-
-        console.log('Current Save:')
-        console.log(this.tickets)
     }
 
     loadTicketsFromStorage() {
@@ -269,35 +300,7 @@ class KanBan {
 
 
 /****** @TODO 
-1. Save kanban ticket changes.
-        1A) Save the position of the tickets. 
-2. Add spacer before or after ticket during dragover ticket.
-        2A) Determine logic for removing the spacer.
-            - New spacer is created via dragover.
-            - Drop is completed.
-            - Dragend without drop. 
-            - Hover over element that is not a ticket, like the status list. 
+
+1. Add normalization routine for the ticket positions. 
 
 ********/
-
-
-/******
- * 
- * Examples:
-
-onDrop(e) {
-    const ticketId = parseInt(draggedEl.dataset.id);
-    const newStatus = dropColumn.dataset.status;
-
-    const ticket = this.tickets.find(t => t.id === ticketId);
-    if (ticket) {
-        ticket.status = newStatus;
-        this.saveTicketsToStorage();
-    }
-}
-
-
-
- * 
- * 
- */

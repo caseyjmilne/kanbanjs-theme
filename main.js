@@ -50,4 +50,4 @@ statuses = [
 
 /****** Run KanBan ********/
 
-const kb = new KanBan( tickets, statuses, false );
+const kb = new KanBan( tickets, statuses );
