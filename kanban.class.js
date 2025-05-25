@@ -249,7 +249,7 @@ class KanBan {
 
         this.statuses.forEach( (status, i) => {
             const el = document.createElement('div');
-            el.innerHTML = status.title;
+            el.innerHTML = '<h2>' + status.title + '</h2>';
             el.id = 'dropzone-' + status.key;
             el.classList.add('status-col');
             el.classList.add('status-col-' + status.key);
@@ -301,6 +301,7 @@ class KanBan {
 
 /****** @TODO 
 
-1. Add normalization routine for the ticket positions. 
+1. Add normalization routine for the ticket positions.
+2. Pass in element ID or object for initialization. 
 
 ********/

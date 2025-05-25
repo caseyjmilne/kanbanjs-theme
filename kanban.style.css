@@ -1,18 +1,29 @@
+.kanban {
+    margin: 80px 0;
+}
+
 .status-col {
-    border: solid 1px rgb(200, 200, 200);
+    background: rgb(40, 40, 40);
+    display: grid;
+    gap: 16px;
+    align-items: start;
     min-height: 500px;
+    align-self: start;
 }
 
 .ticket {
     border: solid 1px rgb(180, 180, 180);
     height: 120px;
     background-color: rgb(240, 240, 240);
+    border-radius: 16px;
+    padding: 16px;
 }
 
 #dropzones {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 8px;
+    align-items: start;
 }
 
 .dropzone {
