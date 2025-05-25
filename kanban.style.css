@@ -1,22 +1,10 @@
 .kanban {
     margin: 80px 0;
-}
-
-.status-col {
-    background: rgb(40, 40, 40);
-    display: grid;
-    gap: 16px;
-    align-items: start;
-    min-height: 500px;
-    align-self: start;
-}
-
-.ticket {
-    border: solid 1px rgb(180, 180, 180);
-    height: 120px;
-    background-color: rgb(240, 240, 240);
-    border-radius: 16px;
-    padding: 16px;
+    background: rgb(30, 30, 30);
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: rgb( 200, 200, 200 );
 }
 
 #dropzones {
@@ -26,9 +14,37 @@
     align-items: start;
 }
 
-.dropzone {
-    background-color: green;
+.status-col {
+    background: rgb(40, 40, 40);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: start;
+    border-radius: 8px;
+    align-self: start;
+    padding: 8px;
     min-height: 500px;
+}
+
+.status-col > h2 {
+    width: 100%;
+    color: rgb( 120, 120, 120 );
+    font-size: 0.925rem;
+    padding: 8px;
+    border-radius: 8px;
+    margin: 8px 0;
+    background: rgb( 60, 60, 60);
+    box-sizing: border-box;
+}
+
+.ticket {
+    width: 100%;
+    height: 100px;
+    background-color: rgb(80, 80, 80);
+    border-radius: 8px;
+    padding: 8px;
+    box-sizing: border-box;
+    cursor: move;
 }
 
 .ticket-shifted {
@@ -41,5 +57,5 @@
 
 .drop-spacer {
     background-color: rgb(152, 251, 152);
-    height: 40px;
+    height: 20px;
 }
