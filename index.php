@@ -1,5 +1,5 @@
 <?php get_header(); ?>
 
-<div id="kanban" class="kanban"></div>
+<p>Where are you? Where are you going?</p>
 
 <?php get_footer(); ?>

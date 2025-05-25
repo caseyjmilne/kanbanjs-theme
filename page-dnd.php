@@ -113,7 +113,7 @@ dropzone2.addEventListener( 'drop', ( e ) => {
 </code>
 </pre>
 
-<p>In the drop handler we retrieve the draggable ticket ID from e.dataTransfer.getData(). We can then insert the ticket into the dropzone with e.currentTarget.appendChild()</p>
+<p>In the drop handler we retrieve the draggable ticket ID from e.dataTransfer.getData(). We can then insert the ticket into the dropzone with e.currentTarget.appendChild().</p>
 
 <style>
 
