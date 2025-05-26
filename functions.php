@@ -94,6 +94,14 @@ add_action('wp_enqueue_scripts', function() {
         );
 
         wp_enqueue_script(
+            'editor-debug',
+            get_template_directory_uri() . '/components/editor/Debug.js',
+            array(),
+            null,
+            true
+        );
+
+        wp_enqueue_script(
             'editor-main',
             get_template_directory_uri() . '/components/editor/Editor.js',
             array(),

@@ -25,6 +25,7 @@ class Editor {
     this.toolbox = new Toolbox();
     this.canvas = new Canvas();
     this.settings = new Settings();
+    this.debug = new Debug(this.canvas);
   }
 
   bindUI() {

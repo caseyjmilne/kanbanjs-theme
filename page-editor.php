@@ -17,6 +17,10 @@
             <h2>Settings</h2>
         </div>
     </div>
+    <div class="editor-debug">
+      <div class="editor-debug__save-data"></div>
+      <div class="editor-debug__markup"></div>
+    </div>
 </div>
 
 <?php the_content(); ?>
@@ -117,6 +121,26 @@
   cursor: pointer;
   font-size: 12px;
   border-radius: 4px;
+}
+
+.editor-debug {
+  display: flex;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.editor-debug__save-data,
+.editor-debug__markup {
+  flex: 1;
+  background: #1a1a1a;
+  color: #00ff88;
+  font-family: monospace;
+  font-size: 12px;
+  padding: 10px;
+  white-space: pre-wrap;
+  overflow: auto;
+  border: 1px solid #444;
+  max-height: 300px;
 }
 
 </style>
