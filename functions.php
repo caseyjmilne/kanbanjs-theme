@@ -18,23 +18,89 @@ add_action('wp_enqueue_scripts', function() {
     if( is_page('kanban' ) ) {
 
         wp_enqueue_script(
-        'kanban-class', // handle
-        get_template_directory_uri() . '/kanban.class.js', // path
-        array(), // dependencies, e.g., array('jquery') if needed
-        null, // version (use null to skip, or a version string)
-        true // in footer
-    );
+            'kanban-class', // handle
+            get_template_directory_uri() . '/kanban.class.js', // path
+            array(), // dependencies, e.g., array('jquery') if needed
+            null, // version (use null to skip, or a version string)
+            true // in footer
+        );
 
-    wp_enqueue_script(
-        'theme-main-script', // handle
-        get_template_directory_uri() . '/main.js', // path
-        array(), // dependencies, e.g., array('jquery') if needed
-        null, // version (use null to skip, or a version string)
-        true // in footer
-    );
+        wp_enqueue_script(
+            'theme-main-script', // handle
+            get_template_directory_uri() . '/main.js', // path
+            array(), // dependencies, e.g., array('jquery') if needed
+            null, // version (use null to skip, or a version string)
+            true // in footer
+        );
 
     }
 
-    
+    if( is_page('editor' ) ) {
+
+        wp_enqueue_script(
+            'editor-component',
+            get_template_directory_uri() . '/components/editor/Component.js',
+            array(),
+            null,
+            true
+        );
+
+        wp_enqueue_script(
+            'editor-component-scheduler',
+            get_template_directory_uri() . '/components/editor/ComponentScheduler.js',
+            array(),
+            null,
+            true
+        );
+
+        wp_enqueue_script(
+            'editor-reactive-value',
+            get_template_directory_uri() . '/components/editor/ReactiveValue.js',
+            array(),
+            null,
+            true
+        );
+
+        wp_enqueue_script(
+            'editor-toolbox',
+            get_template_directory_uri() . '/components/editor/Toolbox.js',
+            array(),
+            null,
+            true
+        );
+
+        wp_enqueue_script(
+            'editor-text-block',
+            get_template_directory_uri() . '/components/editor/TextBlock.js',
+            array(),
+            null,
+            true
+        );
+
+        wp_enqueue_script(
+            'editor-canvas',
+            get_template_directory_uri() . '/components/editor/Canvas.js',
+            array(),
+            null,
+            true
+        );
+
+        wp_enqueue_script(
+            'editor-settings',
+            get_template_directory_uri() . '/components/editor/Settings.js',
+            array(),
+            null,
+            true
+        );
+
+        wp_enqueue_script(
+            'editor-main',
+            get_template_directory_uri() . '/components/editor/Editor.js',
+            array(),
+            null,
+            true
+        );
+
+    } 
 
 });
