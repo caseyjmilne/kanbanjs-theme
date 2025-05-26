@@ -79,6 +79,3 @@ class Settings {
     return wrapper;
   }
 }
-
-window.Settings = Settings;
-new Settings();

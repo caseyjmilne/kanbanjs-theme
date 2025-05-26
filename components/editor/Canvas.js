@@ -1,5 +1,7 @@
 class Canvas {
 
+  blocks = []
+
   constructor() {
     console.log('Canvas initialized...');
     this.mount();
@@ -31,46 +33,121 @@ class Canvas {
   }
 
   addBlock(type) {
-    const block = document.createElement('div');
-    block.className = 'canvas-block';
-    block.dataset.type = type;
 
+    let block;
+
+    // Special handling for "text" block using TextBlock class
+    if (type === 'text') {
+      const state = new ReactiveValue('Editable text...');
+      const textComponent = new TextBlock(state);
+      block = textComponent.mount(this.canvas);
+
+      console.log(block)
+
+      block.classList.add('canvas-block'); // Ensure consistent class
+      block.dataset.type = 'text';
+      this.blocks.push(textComponent); // Optional: track components
+    } else {
+      block = document.createElement('div');
+      block.className = 'canvas-block';
+      block.dataset.type = type;
+
+      switch (type) {
+        case 'image':
+          block.innerHTML = '<img src="https://via.placeholder.com/150" alt="Image Block">';
+          break;
+
+        case 'video':
+          block.innerHTML = '<video controls width="200"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">Your browser does not support video.</video>';
+          break;
+
+        case 'button':
+          block.innerHTML = '<button class="canvas-button">Click me</button>';
+          break;
+
+        default:
+          block.textContent = `Unknown block: ${type}`;
+      }
+    }
+
+    // Shared block logic
     block.addEventListener('click', (e) => {
       e.stopPropagation(); // Prevent bubbling
       document.querySelectorAll('.canvas-block').forEach(el => el.classList.remove('selected'));
       block.classList.add('selected');
 
-      // Dispatch custom event
       document.dispatchEvent(new CustomEvent('block:select', {
         detail: { block }
       }));
     });
 
-    switch (type) {
-      case 'text':
-        block.textContent = 'Editable text...';
-        block.contentEditable = true;
+    this.canvas.appendChild(block);
+  }
+
+
+  getBlocksData() {
+
+    const blocks = Array.from(this.canvas.querySelectorAll('.canvas-block'));
+
+    return blocks.map(block => {
+
+      const type = block.dataset.type;
+
+      switch (type) {
+        case 'text':
+          return { type, content: block.textContent };
+
+        case 'image':
+          const img = block.querySelector('img');
+          return { type, src: img?.src || '' };
+
+        case 'video':
+          const video = block.querySelector('video source');
+          return { type, src: video?.src || '' };
+
+        case 'button':
+          return { type, label: block.textContent };
+
+        default:
+          return { type: 'unknown', raw: block.innerHTML };
+      }
+    });
+
+  }
+
+  clear() {
+    this.canvas.innerHTML = '';
+    this.blocks = [];
+  }
+
+  addBlockFromData(data) {
+    
+    switch (data.type) {
+      case 'text': {
+        const state = new ReactiveValue('');
+        const textBlock = new TextBlock(state);
+        textBlock.load({ value: data.value }); // call .load() to apply saved value
+        textBlock.mount(this.canvas);
+        this.blocks.push(textBlock);
         break;
+      }
 
       case 'image':
-        block.innerHTML = '<img src="https://via.placeholder.com/150" alt="Image Block">';
-        break;
-
-      case 'video':
-        block.innerHTML = '<video controls width="200"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">Your browser does not support video.</video>';
+        this.addBlock('image', data.src);
         break;
 
       case 'button':
-        block.innerHTML = '<button class="canvas-button">Click me</button>';
+        this.addBlock('button', data.label);
+        break;
+
+      case 'video':
+        this.addBlock('video', data.src);
         break;
 
       default:
-        block.textContent = `Unknown block: ${type}`;
+        console.warn('Unknown block type:', data.type);
     }
 
-    this.canvas.appendChild(block);
   }
-}
 
-window.Canvas = Canvas;
-new Canvas();
+}

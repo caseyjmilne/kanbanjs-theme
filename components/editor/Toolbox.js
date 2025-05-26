@@ -38,6 +38,3 @@ class Toolbox {
     toolbox.appendChild(list);
   }
 }
-
-window.Toolbox = Toolbox;
-new Toolbox();

@@ -1,7 +1,11 @@
 <?php get_header(); ?>
 
 <div class="editor">
-    <h2 class="editor__title">Zero Editor</h2>
+    <header class="editor__header">
+      <h2 class="editor__title">Zero Editor</h2>
+      <button id="save-button">Save</button>
+      <button id="clear-canvas" class="clear-button">Clear</button>
+    </header>
     <div class="editor__content">
         <div class="toolbox">
             <h2>Toolbox</h2>
@@ -24,6 +28,10 @@
     background: rgb(40,40,40);
     color: rgb(200,200,200);
     padding: 2px;
+}
+
+.editor__header {
+  display: flex;
 }
 
 .editor__content {
@@ -98,6 +106,17 @@
 
 .canvas-block.selected {
   outline: 2px solid #00aaff;
+}
+
+.clear-button {
+  background: crimson;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 4px;
 }
 
 </style>
