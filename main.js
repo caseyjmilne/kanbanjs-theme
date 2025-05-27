@@ -56,28 +56,41 @@ statuses = [
 
 /****** Run KanBan ********/
 const kanbanEl = document.getElementById('kanban');
+
 if( kanbanEl ) {
+
     const kb = new KanBan( kanbanEl, tickets, statuses );
+
+    const kbSave = document.getElementById('kanban-save');
+    kbSave.addEventListener('click', () => {
+        console.log('saving...')
+        const currentTickets = kb.getTickets();
+        console.log(currentTickets)
+        localStorage.setItem('kanbanTickets', JSON.stringify( currentTickets ));
+    });
+
+    const kbLoad = document.getElementById('kanban-load');
+    kbLoad.addEventListener('click', () => {
+        console.log('loading...')
+        const storedTicketsJson = localStorage.getItem('kanbanTickets');
+        if (storedTicketsJson) {
+            try {
+                const storedTickets = JSON.parse(storedTicketsJson);
+                kb.setTickets(storedTickets);
+                kb.clearTickets();
+                kb.renderTickets();
+                console.log(storedTickets)
+            } catch (e) {
+                console.error("Failed to parse saved tickets", e);
+            }
+        }
+    });
 
     const kbNormalize = document.getElementById('kanban-normalize');
     kbNormalize.addEventListener('click', () => {
         kb.normalizePositions();
     });
-}
 
-function kanbanSaveTicketsToStorage() {
-    localStorage.setItem('kanbanTickets', JSON.stringify(this.tickets));
-}
-
-function loadTicketsFromStorage() {
-    const stored = localStorage.getItem('kanbanTickets');
-    if (stored) {
-        try {
-            this.tickets = JSON.parse(stored);
-        } catch (e) {
-            console.error("Failed to parse saved tickets", e);
-        }
-    }
 }
 
 

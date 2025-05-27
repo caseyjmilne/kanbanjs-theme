@@ -21,6 +21,10 @@ class KanBan {
         this.tickets = [...tickets];
     }
 
+    getTickets() {
+        return this.tickets;
+    }
+
     init() {
 
         this.dropzonesEl    = document.createElement('div');
@@ -32,6 +36,12 @@ class KanBan {
         this.renderTickets();
 
     }
+
+    /*********
+     * 
+     * Drag and Drop Handler Methods
+     *
+     */
 
     dragstartHandler(e) {
 
@@ -211,10 +221,15 @@ class KanBan {
         return statusColEl.getAttribute('status-key');
     }
 
+    /*********
+     * 
+     * Rendering & Refresh Methods
+     *
+     */
+
     // Each status becomes a droppable column.
     renderStatusColumns() {
 
-        
         const dzc = document.getElementById('dropzones');
 
         this.statuses.forEach( (status, i) => {
@@ -232,6 +247,18 @@ class KanBan {
             this.statusCols[status.key] = el;
         })
 
+    }
+
+    clearStatusColumns() {
+        const dzc = document.getElementById('dropzones');
+
+        // Remove all child elements
+        while (dzc.firstChild) {
+            dzc.removeChild(dzc.firstChild);
+        }
+
+        // Reset tracking object
+        this.statusCols = {};
     }
 
     // Each ticket becomes a draggable box.
@@ -259,6 +286,14 @@ class KanBan {
             this.statusCols[ticket.status].appendChild(el);
         })
 
+    }
+
+    clearTickets() {
+        // Loop through each status column and clear its child ticket elements
+        Object.values(this.statusCols).forEach(colEl => {
+            // Remove only ticket elements
+            colEl.querySelectorAll('.ticket').forEach(ticketEl => ticketEl.remove());
+        });
     }
 
     removeSpacerDropzones() {
