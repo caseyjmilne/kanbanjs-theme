@@ -49,5 +49,7 @@ statuses = [
 ]
 
 /****** Run KanBan ********/
-
-const kb = new KanBan( tickets, statuses );
+const kanbanEl = document.getElementById('kanban');
+if( kanbanEl ) {
+    const kb = new KanBan( kanbanEl, tickets, statuses );
+}
