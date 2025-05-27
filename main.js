@@ -25,6 +25,12 @@ const tickets = [
         title: "Buy apartment in Panama.",
         status: "new",
         position: 0
+    },
+    {
+        id: 104,
+        title: "Make a little bit of progress on caseymilne.com by 2025-05-27",
+        status: "active",
+        position: 1
     }
 ]
 
@@ -52,4 +58,26 @@ statuses = [
 const kanbanEl = document.getElementById('kanban');
 if( kanbanEl ) {
     const kb = new KanBan( kanbanEl, tickets, statuses );
+
+    const kbNormalize = document.getElementById('kanban-normalize');
+    kbNormalize.addEventListener('click', () => {
+        kb.normalizePositions();
+    });
 }
+
+function kanbanSaveTicketsToStorage() {
+    localStorage.setItem('kanbanTickets', JSON.stringify(this.tickets));
+}
+
+function loadTicketsFromStorage() {
+    const stored = localStorage.getItem('kanbanTickets');
+    if (stored) {
+        try {
+            this.tickets = JSON.parse(stored);
+        } catch (e) {
+            console.error("Failed to parse saved tickets", e);
+        }
+    }
+}
+
+

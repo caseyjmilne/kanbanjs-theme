@@ -5,30 +5,28 @@ class KanBan {
     statusCols    = [] // Used to track the dropzone elements created from status list.
     dragTicket    = null;
     dropzonesEl   = null;
+    container     = null;
 
     // Requires tickets, statuses passed.
-    constructor( container, tickets, statuses, resetStorage = null ) {
+    constructor( container, tickets = [], statuses = [] ) {
 
-        // Set local tickets, statuses.
-
-        this.tickets = [...tickets]; // working state
-        this.statuses = [...statuses];
-
-        if( resetStorage === null ) {
-            this.loadTicketsFromStorage(); // try to restore from previous session
-        }
-
-        this.dropzonesEl    = document.createElement('div');
-        this.dropzonesEl.id = "dropzones";
-        this.dropzonesEl.style.gridTemplateColumns = 'repeat(' + this.statuses.length + ', 1fr)';
-
-        container.appendChild( this.dropzonesEl );
-
+        this.container = container;
+        this.tickets   = [...tickets];
+        this.statuses  = [...statuses];
         this.init();
 
     }
 
+    setTickets( tickets ) {
+        this.tickets = [...tickets];
+    }
+
     init() {
+
+        this.dropzonesEl    = document.createElement('div');
+        this.dropzonesEl.id = "dropzones";
+        this.dropzonesEl.style.gridTemplateColumns = 'repeat(' + this.statuses.length + ', 1fr)';
+        this.container.appendChild( this.dropzonesEl );
 
         this.renderStatusColumns();
         this.renderTickets();
@@ -37,12 +35,8 @@ class KanBan {
 
     dragstartHandler(e) {
 
-        // Store the ticket ID that is being dragged.
         e.dataTransfer.setData("text", e.target.id);
-
-        // Add .ticket-dragged class. 
         e.target.classList.add('ticket-dragged');
-
         this.dragTicket = e.target.id;
 
     }
@@ -62,14 +56,12 @@ class KanBan {
         // Verify that the target is the status column.
         const val = e.target.classList[0] === 'status-col';
         if(val) {
-            // Enable dropping.
             e.preventDefault();
         }
 
         // Handle drop on drop spacer.
         const isDropspacer = e.target.classList[0] === 'drop-spacer';
         if(isDropspacer) {
-            // Enable dropping.
             e.preventDefault();
         }
 
@@ -77,7 +69,6 @@ class KanBan {
         const isTicket = e.target.classList[0] === 'ticket';
         if(isTicket) {
 
-            // Enable dropping.
             e.preventDefault();
 
             // Remove existing spacer dropzone.
@@ -117,12 +108,8 @@ class KanBan {
         // Save change status.
         const ticket = this.tickets.find(t => t.id === ticketId);
 
-
-        console.log(ticket)
-
         if (ticket) {
             ticket.status = newStatus;
-            this.saveTicketsToStorage();
         }
 
         // Handle drop on drop spacer.
@@ -194,13 +181,9 @@ class KanBan {
         // Update the ticket position and save to storage.
         ticket.position = newPosition;
         ticketEl.setAttribute('ticket-position', newPosition);
-        this.saveTicketsToStorage();
 
-        console.log('Dropped Ticket Index')
-        console.log( droppedTicketIndex )
-
-        console.log('Dropped Ticket New Position')
-        console.log( newPosition )
+        const ticketPositionEl = ticketEl.querySelector('.ticket-position');
+        ticketPositionEl.textContent = ticket.position;
 
     }
 
@@ -222,21 +205,6 @@ class KanBan {
         }
         return false;
 
-    }
-
-    saveTicketsToStorage() {
-        localStorage.setItem('kanbanTickets', JSON.stringify(this.tickets));
-    }
-
-    loadTicketsFromStorage() {
-        const stored = localStorage.getItem('kanbanTickets');
-        if (stored) {
-            try {
-                this.tickets = JSON.parse(stored);
-            } catch (e) {
-                console.error("Failed to parse saved tickets", e);
-            }
-        }
     }
 
     getDropStatus(statusColEl) {
@@ -275,7 +243,11 @@ class KanBan {
         sortedTickets.forEach( (ticket, i) => {
             const el = document.createElement('div');
             el.id = 'ticket-' + ticket.id;
-            el.innerHTML = ticket.title;
+            el.innerHTML = `
+                <h5 style="font-size: 10px;">` + ticket.id + `</h5>
+                <h2 style="font-size: 12px;">` + ticket.title + `</h2>
+                <h3 class="ticket-position" style="font-size: 11px;">Position: ` + ticket.position + `</h3>
+            `;
             el.classList.add('ticket');
             el.draggable = true;
             el.setAttribute('ticket-id', ticket.id);
@@ -294,6 +266,10 @@ class KanBan {
         dropSpacerEls.forEach( ( dropSpacerEl, i ) => {
             dropSpacerEl.remove();
         });
+    }
+
+    normalizePositions() {
+        console.log('normalize positions....')
     }
 
 }
