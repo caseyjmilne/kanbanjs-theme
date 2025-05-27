@@ -71,7 +71,15 @@ add_action('wp_enqueue_scripts', function() {
 
         wp_enqueue_script(
             'editor-text-block',
-            get_template_directory_uri() . '/components/editor/TextBlock.js',
+            get_template_directory_uri() . '/components/editor/blocks/TextBlock.js',
+            array(),
+            null,
+            true
+        );
+
+        wp_enqueue_script(
+            'editor-image-block',
+            get_template_directory_uri() . '/components/editor/blocks/ImageBlock.js',
             array(),
             null,
             true

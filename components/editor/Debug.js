@@ -1,10 +1,11 @@
 class Debug {
 
   constructor(canvas, storageKey = 'editorData') {
+    
     this.canvas = canvas;
     this.storageKey = storageKey;
     this.elSave = document.querySelector('.editor-debug__save-data');
-    this.elMarkup = document.querySelector('.editor-debug__markup');
+    this.elMarkup = document.querySelector('.editor-debug__markup-contents');
 
     this.refresh(); // initial display
 
@@ -20,7 +21,7 @@ class Debug {
       : '// no saved data';
 
     // 2. Show current canvas markup
-    this.elMarkup.textContent = this.canvas?.canvas?.innerHTML || '// no canvas';
+    this.elMarkup.textContent = this.canvas.canvas.innerHTML;
   }
 
   formatJSON(str) {

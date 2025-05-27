@@ -10,16 +10,20 @@
         <div class="toolbox">
             <h2>Toolbox</h2>
         </div>
-        <div class="canvas">
-            <h2>Canvas</h2>
-        </div>
+        <div class="canvas"></div>
         <div class="settings">
             <h2>Settings</h2>
         </div>
     </div>
     <div class="editor-debug">
       <div class="editor-debug__save-data"></div>
-      <div class="editor-debug__markup"></div>
+      <div class="editor-debug__markup">
+        <pre>
+          <code class="editor-debug__markup-contents">
+
+          </code>
+        </pre>
+      </div>
     </div>
 </div>
 

@@ -1,31 +1,27 @@
 class Editor {
   
   constructor() {
-    console.log('Editor initialized...');
+
     this.mount();
     this.bindUI();
     this.load();
+
   }
 
   mount() {
+
     const canvasEl = document.querySelector('.canvas');
     if (!canvasEl) {
       console.error('Canvas not found');
       return;
     }
 
-    // Add visible, editable block (initial demo block)
-    const block = document.createElement('div');
-    block.className = 'text-block';
-    block.contentEditable = true;
-    block.textContent = 'Click to edit this block...';
-    canvasEl.appendChild(block);
-
     // Initialize subcomponents
     this.toolbox = new Toolbox();
     this.canvas = new Canvas();
     this.settings = new Settings();
     this.debug = new Debug(this.canvas);
+
   }
 
   bindUI() {
@@ -47,16 +43,17 @@ class Editor {
   }
 
   save() {
+
     if (!this.canvas || typeof this.canvas.getBlocksData !== 'function') {
       console.warn('Canvas not ready or getBlocksData() missing');
       return;
     }
 
     const data = this.canvas.getBlocksData();
-    console.log('Saving canvas data:', data);
-
     localStorage.setItem('editorData', JSON.stringify(data));
-    alert('Canvas saved to localStorage.');
+
+    document.dispatchEvent(new CustomEvent('editor:update'));
+
   }
 
   load() {
@@ -86,7 +83,6 @@ class Editor {
       this.canvas.addBlockFromData(block);
     });
 
-    console.log('Canvas loaded from localStorage');
   }
 
 }
